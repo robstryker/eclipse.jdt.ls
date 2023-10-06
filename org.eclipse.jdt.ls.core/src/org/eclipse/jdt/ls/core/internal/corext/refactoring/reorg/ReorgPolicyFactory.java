@@ -113,6 +113,9 @@ import org.eclipse.jdt.internal.corext.refactoring.changes.MoveCompilationUnitCh
 import org.eclipse.jdt.internal.corext.refactoring.changes.MovePackageChange;
 import org.eclipse.jdt.internal.corext.refactoring.changes.MovePackageFragmentRootChange;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.ASTNodeDeleteUtil;
+import org.eclipse.jdt.internal.corext.refactoring.reorg.ArrayTypeConverter;
+import org.eclipse.jdt.internal.corext.refactoring.reorg.CopyModifications;
+import org.eclipse.jdt.internal.corext.refactoring.reorg.CreateCopyOfCompilationUnitChange;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.CreateTargetExecutionLog;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.ICreateTargetQueries;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.ICreateTargetQuery;
@@ -123,6 +126,7 @@ import org.eclipse.jdt.internal.corext.refactoring.reorg.IReorgPolicy;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.IReorgPolicy.ICopyPolicy;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.IReorgQueries;
+import org.eclipse.jdt.internal.corext.refactoring.reorg.RefactoringModifications;
 import org.eclipse.jdt.internal.corext.refactoring.structure.ASTNodeSearchUtil;
 import org.eclipse.jdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.jdt.internal.corext.refactoring.structure.ImportRewriteUtil;
