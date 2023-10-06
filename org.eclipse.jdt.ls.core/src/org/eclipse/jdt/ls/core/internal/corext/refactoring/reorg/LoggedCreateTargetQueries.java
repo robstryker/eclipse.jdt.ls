@@ -31,8 +31,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.CreateTargetExecutionLog;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.ICreateTargetQueries;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.ICreateTargetQuery;
+import org.eclipse.jdt.internal.ui.util.ResourcesUtility;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
-import org.eclipse.jdt.ls.core.internal.corext.refactoring.util.ResourceUtil;
 
 /**
  * Logged implementation of new create target queries.
@@ -58,7 +58,7 @@ public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 			}
 			final IFolder folder= project.getProject().getFolder(root.getElementName());
 			if (!folder.exists()) {
-				ResourceUtil.createFolder(folder, true, true, new NullProgressMonitor());
+				ResourcesUtility.createFolder(folder, true, true, new NullProgressMonitor());
 			}
 			final List<IClasspathEntry> list= Arrays.asList(project.getRawClasspath());
 			list.add(JavaCore.newSourceEntry(folder.getFullPath()));
@@ -93,7 +93,7 @@ public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 						//						createJavaProject(project);
 					}
 					if (!folder.exists()) {
-						ResourceUtil.createFolder(folder, true, true, new NullProgressMonitor());
+						ResourcesUtility.createFolder(folder, true, true, new NullProgressMonitor());
 					}
 				} catch (CoreException exception) {
 					JavaLanguageServerPlugin.log(exception);
