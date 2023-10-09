@@ -70,6 +70,7 @@ import org.eclipse.jdt.internal.corext.refactoring.RefactoringAvailabilityTester
 import org.eclipse.jdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.jdt.internal.corext.refactoring.code.ExtractConstantRefactoring;
 import org.eclipse.jdt.internal.corext.refactoring.code.ExtractMethodRefactoring;
+import org.eclipse.jdt.internal.corext.refactoring.code.ExtractTempRefactoring;
 import org.eclipse.jdt.internal.corext.refactoring.code.IntroduceParameterRefactoring;
 import org.eclipse.jdt.internal.corext.refactoring.code.PromoteTempToFieldRefactoring;
 import org.eclipse.jdt.internal.corext.refactoring.structure.ChangeSignatureProcessor;
@@ -82,7 +83,6 @@ import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
 import org.eclipse.jdt.ls.core.internal.Messages;
 import org.eclipse.jdt.ls.core.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.jdt.ls.core.internal.corext.refactoring.code.ExtractFieldRefactoring;
-import org.eclipse.jdt.ls.core.internal.corext.refactoring.code.ExtractTempRefactoring;
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
 import org.eclipse.jdt.ls.core.internal.corrections.IInvocationContext;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.AssignToVariableAssistProposal;
