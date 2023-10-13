@@ -26,9 +26,9 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.internal.core.manipulation.util.BasicElementLabels;
 import org.eclipse.jdt.internal.corext.dom.LinkedNodeFinder;
+import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.ls.core.internal.Messages;
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
-import org.eclipse.jdt.ls.core.internal.corrections.IInvocationContext;
 import org.eclipse.lsp4j.CodeActionKind;
 
 
@@ -40,7 +40,7 @@ public class CorrectMainTypeNameProposal extends ASTRewriteCorrectionProposal {
 
 	private final String fOldName;
 	private final String fNewName;
-	private final IInvocationContext fContext;
+	private final IInvocationContextCore  fContext;
 
 	/**
 	 * Constructor for CorrectTypeNameProposal.
@@ -50,7 +50,7 @@ public class CorrectMainTypeNameProposal extends ASTRewriteCorrectionProposal {
 	 * @param newTypeName the new type name
 	 * @param relevance the relevance
 	 */
-	public CorrectMainTypeNameProposal(ICompilationUnit cu, IInvocationContext context, String oldTypeName, String newTypeName, int relevance) {
+	public CorrectMainTypeNameProposal(ICompilationUnit cu, IInvocationContextCore  context, String oldTypeName, String newTypeName, int relevance) {
 		super("", CodeActionKind.QuickFix, cu, null, relevance); //$NON-NLS-1$
 		fContext= context;
 

@@ -27,11 +27,13 @@ import org.eclipse.jdt.internal.corext.fix.ICleanUpCore;
 import org.eclipse.jdt.internal.corext.fix.IProposableFix;
 import org.eclipse.jdt.internal.corext.fix.PotentialProgrammingProblemsFixCore;
 import org.eclipse.jdt.internal.ui.fix.PotentialProgrammingProblemsCleanUpCore;
+import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProposalRelevance;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.ChangeCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.FixCorrectionProposal;
+import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler;
 import org.eclipse.jdt.ls.core.internal.managers.ProjectsManager;
+import org.eclipse.lsp4j.CodeActionKind;
 
 /**
  * Subprocessor for serial version quickfix proposals.
@@ -43,7 +45,7 @@ public final class SerialVersionSubProcessor {
 	public static final class SerialVersionProposal extends FixCorrectionProposal {
 		private boolean fIsDefaultProposal;
 
-		public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContext context, boolean isDefault) {
+		public SerialVersionProposal(IProposableFix fix, int relevance, IInvocationContextCore context, boolean isDefault) {
 			super(fix, createCleanUp(isDefault), relevance, context);
 			fIsDefaultProposal = isDefault;
 		}
@@ -83,7 +85,7 @@ public final class SerialVersionSubProcessor {
 	 * @param proposals
 	 *            the proposal collection to extend
 	 */
-	public static final void getSerialVersionProposals(final IInvocationContext context, final IProblemLocationCore location, final Collection<ChangeCorrectionProposal> proposals) {
+	public static final void getSerialVersionProposals(final IInvocationContextCore context, final IProblemLocationCore location, final Collection<ProposalKindWrapper> proposals) {
 
 		Assert.isNotNull(context);
 		Assert.isNotNull(location);
@@ -91,10 +93,10 @@ public final class SerialVersionSubProcessor {
 
 		IProposableFix[] fixes = PotentialProgrammingProblemsFixCore.createMissingSerialVersionFixes(context.getASTRoot(), location);
 		if (fixes != null) {
-			proposals.add(new SerialVersionProposal(fixes[0], IProposalRelevance.MISSING_SERIAL_VERSION_DEFAULT, context, true));
+			proposals.add(CodeActionHandler.wrap(new SerialVersionProposal(fixes[0], IProposalRelevance.MISSING_SERIAL_VERSION_DEFAULT, context, true), CodeActionKind.QuickFix));
 			ICompilationUnit unit = context.getCompilationUnit();
 			if (unit != null && unit.getJavaProject() != null && !ProjectsManager.DEFAULT_PROJECT_NAME.equals(unit.getJavaProject().getProject().getName())) {
-				proposals.add(new SerialVersionProposal(fixes[1], IProposalRelevance.MISSING_SERIAL_VERSION, context, false));
+				proposals.add(CodeActionHandler.wrap(new SerialVersionProposal(fixes[1], IProposalRelevance.MISSING_SERIAL_VERSION, context, false), CodeActionKind.QuickFix));
 			}
 		}
 	}

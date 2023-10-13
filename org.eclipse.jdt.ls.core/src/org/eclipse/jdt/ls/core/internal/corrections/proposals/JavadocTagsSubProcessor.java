@@ -60,12 +60,18 @@ import org.eclipse.jdt.internal.core.manipulation.dom.ASTResolving;
 import org.eclipse.jdt.internal.core.manipulation.util.Strings;
 import org.eclipse.jdt.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.internal.corext.dom.Bindings;
+import org.eclipse.jdt.internal.ui.text.correction.AddAllMissingJavadocTagsProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.AddJavadocCommentProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.AddMissingJavadocTagProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProposalRelevance;
 import org.eclipse.jdt.ls.core.internal.Messages;
 import org.eclipse.jdt.ls.core.internal.StatusFactory;
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
-import org.eclipse.jdt.ls.core.internal.corrections.IInvocationContext;
+import org.eclipse.jdt.ls.core.internal.corrections.ProposalKindWrapper;
+import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler;
+import org.eclipse.jdt.ui.text.java.correction.ASTRewriteCorrectionProposalCore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -331,7 +337,7 @@ public class JavadocTagsSubProcessor {
 
 	}
 
-	public static void getMissingJavadocTagProposals(IInvocationContext context, IProblemLocationCore problem, Collection<ChangeCorrectionProposal> proposals) {
+	public static void getMissingJavadocTagProposals(IInvocationContextCore context, IProblemLocationCore problem, Collection<ProposalKindWrapper> proposals) {
 		ASTNode node= problem.getCoveringNode(context.getASTRoot());
 		if (node == null) {
 			return;
@@ -367,16 +373,16 @@ public class JavadocTagsSubProcessor {
 		} else {
 			return;
 		}
-		ASTRewriteCorrectionProposal proposal= new AddMissingJavadocTagProposal(label, context.getCompilationUnit(), bodyDeclaration, node, IProposalRelevance.ADD_MISSING_TAG);
-		proposals.add(proposal);
+		ASTRewriteCorrectionProposalCore proposal = new AddMissingJavadocTagProposalCore(label, context.getCompilationUnit(), bodyDeclaration, node, IProposalRelevance.ADD_MISSING_TAG);
+		proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 
 		String label2= CorrectionMessages.JavadocTagsSubProcessor_addjavadoc_allmissing_description;
-		ASTRewriteCorrectionProposal addAllMissing= new AddAllMissingJavadocTagsProposal(label2, context.getCompilationUnit(), bodyDeclaration, IProposalRelevance.ADD_ALL_MISSING_TAGS);
-		proposals.add(addAllMissing);
+		ASTRewriteCorrectionProposalCore addAllMissing = new AddAllMissingJavadocTagsProposalCore(label2, context.getCompilationUnit(), bodyDeclaration, IProposalRelevance.ADD_ALL_MISSING_TAGS);
+		proposals.add(CodeActionHandler.wrap(addAllMissing, CodeActionKind.QuickFix));
 	}
 
-	public static void getUnusedAndUndocumentedParameterOrExceptionProposals(IInvocationContext context,
-			IProblemLocationCore problem, Collection<ChangeCorrectionProposal> proposals) {
+	public static void getUnusedAndUndocumentedParameterOrExceptionProposals(IInvocationContextCore context,
+			IProblemLocationCore problem, Collection<ProposalKindWrapper> proposals) {
 		ICompilationUnit cu= context.getCompilationUnit();
 		IJavaProject project= cu.getJavaProject();
 
@@ -412,12 +418,12 @@ public class JavadocTagsSubProcessor {
 			node= ASTNodes.getNormalizedNode(node);
 			label= CorrectionMessages.JavadocTagsSubProcessor_document_exception_description;
 		}
-		ASTRewriteCorrectionProposal proposal= new AddMissingJavadocTagProposal(label, context.getCompilationUnit(), bodyDecl, node, IProposalRelevance.DOCUMENT_UNUSED_ITEM);
-		proposals.add(proposal);
+		ASTRewriteCorrectionProposalCore proposal = new AddMissingJavadocTagProposalCore(label, context.getCompilationUnit(), bodyDecl, node, IProposalRelevance.DOCUMENT_UNUSED_ITEM);
+		proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 	}
 
-	public static void getMissingJavadocCommentProposals(IInvocationContext context, ASTNode node,
-			Collection<ChangeCorrectionProposal> proposals, String kind) throws CoreException {
+	public static void getMissingJavadocCommentProposals(IInvocationContextCore context, ASTNode node,
+			Collection<ProposalKindWrapper> proposals, String kind) throws CoreException {
 		if (node == null) {
 			return;
 		}
@@ -448,7 +454,8 @@ public class JavadocTagsSubProcessor {
 			String methodName = methodDecl.getName().getIdentifier();
 			if (string != null && methodName != null) {
 				String label= Messages.format(CorrectionMessages.JavadocTagsSubProcessor_addjavadoc_method_description, methodName);
-				proposals.add(new AddJavadocCommentProposal(label, cu, IProposalRelevance.ADD_JAVADOC_METHOD, kind, declaration.getStartPosition(), string));
+				AddJavadocCommentProposalCore proposal = new AddJavadocCommentProposalCore(label, cu, IProposalRelevance.ADD_JAVADOC_METHOD, declaration.getStartPosition(), string);
+				proposals.add(CodeActionHandler.wrap(proposal, kind));
 			}
 		} else if (declaration instanceof AbstractTypeDeclaration) {
 			String typeQualifiedName= Bindings.getTypeQualifiedName(binding);
@@ -467,7 +474,8 @@ public class JavadocTagsSubProcessor {
 
 			if (string != null && typeQualifiedName != null) {
 				String label= Messages.format(CorrectionMessages.JavadocTagsSubProcessor_addjavadoc_type_description, typeQualifiedName);
-				proposals.add(new AddJavadocCommentProposal(label, cu, IProposalRelevance.ADD_JAVADOC_TYPE, kind, declaration.getStartPosition(), string));
+				AddJavadocCommentProposalCore p = new AddJavadocCommentProposalCore(label, cu, IProposalRelevance.ADD_JAVADOC_TYPE, declaration.getStartPosition(), string);
+				proposals.add(CodeActionHandler.wrap(p, kind));
 			}
 		} else if (declaration instanceof FieldDeclaration fieldDecl) {
 			String comment= "/**\n *\n */\n"; //$NON-NLS-1$
@@ -481,14 +489,16 @@ public class JavadocTagsSubProcessor {
 			}
 			if (comment != null && fieldName != null) {
 				String label= Messages.format(CorrectionMessages.JavadocTagsSubProcessor_addjavadoc_field_description, fieldName);
-				proposals.add(new AddJavadocCommentProposal(label, cu, IProposalRelevance.ADD_JAVADOC_FIELD, kind, declaration.getStartPosition(), comment));
+				AddJavadocCommentProposalCore p = new AddJavadocCommentProposalCore(label, cu, IProposalRelevance.ADD_JAVADOC_FIELD, declaration.getStartPosition(), comment);
+				proposals.add(CodeActionHandler.wrap(p, kind));
 			}
 		} else if (declaration instanceof EnumConstantDeclaration enumDecl) {
 			String id= enumDecl.getName().getIdentifier();
 			String comment = CodeGeneration.getFieldComment(cu, binding.getName(), id, String.valueOf('\n'));
 			if (comment != null && id != null) {
 				String label=Messages.format(CorrectionMessages.JavadocTagsSubProcessor_addjavadoc_enumconst_description, id);
-				proposals.add(new AddJavadocCommentProposal(label, cu, IProposalRelevance.ADD_JAVADOC_ENUM, kind, declaration.getStartPosition(), comment));
+				AddJavadocCommentProposalCore p = new AddJavadocCommentProposalCore(label, cu, IProposalRelevance.ADD_JAVADOC_ENUM, declaration.getStartPosition(), comment);
+				proposals.add(CodeActionHandler.wrap(p, kind));
 			}
 		}
 	}
@@ -667,8 +677,8 @@ public class JavadocTagsSubProcessor {
 		return null;
 	}
 
-	public static void getRemoveJavadocTagProposals(IInvocationContext context, IProblemLocationCore problem,
-			Collection<ChangeCorrectionProposal> proposals) {
+	public static void getRemoveJavadocTagProposals(IInvocationContextCore context, IProblemLocationCore problem,
+			Collection<ProposalKindWrapper> proposals) {
 		ASTNode node= problem.getCoveringNode(context.getASTRoot());
 		while (node != null && !(node instanceof TagElement)) {
 			node= node.getParent();
@@ -680,12 +690,12 @@ public class JavadocTagsSubProcessor {
 		rewrite.remove(node, null);
 
 		String label= CorrectionMessages.JavadocTagsSubProcessor_removetag_description;
-		proposals.add(new ASTRewriteCorrectionProposal(label, CodeActionKind.QuickFix, context.getCompilationUnit(), rewrite,
-				IProposalRelevance.REMOVE_TAG));
+		ASTRewriteCorrectionProposalCore proposal = new ASTRewriteCorrectionProposalCore(label, context.getCompilationUnit(), rewrite, IProposalRelevance.REMOVE_TAG);
+		proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 	}
 
-	public static void getInvalidQualificationProposals(IInvocationContext context, IProblemLocationCore problem,
-			Collection<ChangeCorrectionProposal> proposals) {
+	public static void getInvalidQualificationProposals(IInvocationContextCore context, IProblemLocationCore problem,
+			Collection<ProposalKindWrapper> proposals) {
 		ASTNode node= problem.getCoveringNode(context.getASTRoot());
 		if (!(node instanceof Name)) {
 			return;
@@ -702,9 +712,9 @@ public class JavadocTagsSubProcessor {
 		rewrite.replace(name, ast.newName(typeBinding.getQualifiedName()), null);
 
 		String label= CorrectionMessages.JavadocTagsSubProcessor_qualifylinktoinner_description;
-		ASTRewriteCorrectionProposal proposal = new ASTRewriteCorrectionProposal(label, CodeActionKind.QuickFix, context.getCompilationUnit(),
+		ASTRewriteCorrectionProposalCore proposal = new ASTRewriteCorrectionProposalCore(label, context.getCompilationUnit(),
 				rewrite, IProposalRelevance.QUALIFY_INNER_TYPE_NAME);
 
-		proposals.add(proposal);
+		proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 	}
 }

@@ -24,8 +24,8 @@ public class AssignToVariableAssistCommandProposal extends AssignToVariableAssis
 	private String command;
 	private List<Object> commandArguments;
 
-	public AssignToVariableAssistCommandProposal(ICompilationUnit cu, String kind, int variableKind, ExpressionStatement node, ITypeBinding typeBinding, int relevance, String command, List<Object> commandArguments) {
-		super(cu, kind, variableKind, node, typeBinding, relevance);
+	public AssignToVariableAssistCommandProposal(ICompilationUnit cu, int variableKind, ExpressionStatement node, ITypeBinding typeBinding, int relevance, String command, List<Object> commandArguments) {
+		super(cu, variableKind, node, typeBinding, relevance);
 		this.command = command;
 		this.commandArguments = commandArguments;
 	}
