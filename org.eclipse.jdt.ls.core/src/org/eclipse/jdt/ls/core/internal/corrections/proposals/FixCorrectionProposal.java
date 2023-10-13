@@ -22,8 +22,8 @@ import org.eclipse.jdt.core.refactoring.CompilationUnitChange;
 import org.eclipse.jdt.internal.corext.fix.ICleanUpCore;
 import org.eclipse.jdt.internal.corext.fix.IProposableFix;
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
-import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 
@@ -32,18 +32,14 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
  * fix correction proposal may have an {@link ICleanUp} attached which can be
  * executed instead of the provided IFix.
  */
-public class FixCorrectionProposal extends LinkedCorrectionProposal {
+public class FixCorrectionProposal extends LinkedCorrectionProposalCore {
 
 	private final IProposableFix fFix;
 	private final ICleanUpCore fCleanUp;
 	private CompilationUnit fCompilationUnit;
 
 	public FixCorrectionProposal(IProposableFix fix, ICleanUpCore cleanUp, int relevance, IInvocationContextCore context) {
-		this(fix, cleanUp, relevance, context, CodeActionKind.QuickFix);
-	}
-
-	public FixCorrectionProposal(IProposableFix fix, ICleanUpCore cleanUp, int relevance, IInvocationContextCore context, String codeActionKind) {
-		super(fix.getDisplayString(), codeActionKind, context.getCompilationUnit(), null, relevance);
+		super(fix.getDisplayString(), context.getCompilationUnit(), null, relevance);
 		fFix = fix;
 		fCleanUp = cleanUp;
 		fCompilationUnit = context.getASTRoot();
@@ -95,7 +91,7 @@ public class FixCorrectionProposal extends LinkedCorrectionProposal {
 	}
 
 	@Override
-	protected TextChange createTextChange() throws CoreException {
+	public TextChange createTextChange() throws CoreException {
 		CompilationUnitChange createChange = fFix.createChange(null);
 		createChange.setSaveMode(TextFileChange.LEAVE_DIRTY);
 

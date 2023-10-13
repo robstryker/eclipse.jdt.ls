@@ -42,6 +42,7 @@ import org.eclipse.jdt.core.manipulation.ChangeCorrectionProposalCore;
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProposalRelevance;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.ReplaceCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.AddImportCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.GetterSetterCorrectionSubProcessor;
@@ -49,7 +50,6 @@ import org.eclipse.jdt.ls.core.internal.corrections.proposals.GradleCompatibilit
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.JavadocTagsSubProcessor;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.LocalCorrectionsSubProcessor;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.ReorgCorrectionsSubProcessor;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.ReplaceCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.TypeMismatchSubProcessor;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.UnresolvedElementsSubProcessor;
 import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler;
@@ -119,7 +119,7 @@ public class QuickFixProcessor {
 				String quoteLabel = CorrectionMessages.JavaCorrectionProcessor_addquote_description;
 				int pos = moveBack(problem.getOffset() + problem.getLength(), problem.getOffset(), "\n\r", //$NON-NLS-1$
 						context.getCompilationUnit());
-				ChangeCorrectionProposalCore prop = new ReplaceCorrectionProposal(quoteLabel, context.getCompilationUnit(), pos, 0, "\"", //$NON-NLS-1$
+				ChangeCorrectionProposalCore prop = new ReplaceCorrectionProposalCore(quoteLabel, context.getCompilationUnit(), pos, 0, "\"", //$NON-NLS-1$
 						IProposalRelevance.ADD_QUOTE);
 				proposals.add(CodeActionHandler.wrap(prop, CodeActionKind.QuickFix));
 				break;

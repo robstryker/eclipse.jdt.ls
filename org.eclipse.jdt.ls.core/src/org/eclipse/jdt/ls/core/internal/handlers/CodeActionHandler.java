@@ -39,6 +39,9 @@ import org.eclipse.jdt.core.manipulation.CoreASTProvider;
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.ProblemLocationCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.NewAnnotationMemberProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.NewMethodCorrectionProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.NewVariableCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.ChangeUtil;
 import org.eclipse.jdt.ls.core.internal.JDTUtils;
 import org.eclipse.jdt.ls.core.internal.JavaCodeActionKind;
@@ -48,11 +51,7 @@ import org.eclipse.jdt.ls.core.internal.corrections.InnovationContext;
 import org.eclipse.jdt.ls.core.internal.corrections.ProposalKindWrapper;
 import org.eclipse.jdt.ls.core.internal.corrections.QuickFixProcessor;
 import org.eclipse.jdt.ls.core.internal.corrections.RefactorProcessor;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.ChangeCorrectionProposal;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.NewAnnotationMemberProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.NewCUProposal;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.NewMethodCorrectionProposal;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.NewVariableCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.preferences.PreferenceManager;
 import org.eclipse.jdt.ls.core.internal.preferences.Preferences;
 import org.eclipse.jdt.ls.core.internal.text.correction.AssignToVariableAssistCommandProposal;
@@ -77,7 +76,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 public class CodeActionHandler {
-	public static final ResponseStore<Either<ChangeCorrectionProposal, CodeActionProposal>> codeActionStore
+	public static final ResponseStore<Either<ChangeCorrectionProposalCore, CodeActionProposal>> codeActionStore
 		= new ResponseStore<>(ForkJoinPool.commonPool().getParallelism());
 	public static final String COMMAND_ID_APPLY_EDIT = "java.apply.workspaceEdit";
 
@@ -233,15 +232,15 @@ public class CodeActionHandler {
 	}
 
 	private void populateDataFields(List<Either<Command, CodeAction>> codeActions) {
-		ResponseStore.ResponseItem<Either<ChangeCorrectionProposal, CodeActionProposal>> response = codeActionStore.createResponse();
-		List<Either<ChangeCorrectionProposal, CodeActionProposal>> proposals = new ArrayList<>();
+		ResponseStore.ResponseItem<Either<ChangeCorrectionProposalCore, CodeActionProposal>> response = codeActionStore.createResponse();
+		List<Either<ChangeCorrectionProposalCore, CodeActionProposal>> proposals = new ArrayList<>();
 		codeActions.forEach(action -> {
 			if (action.isRight()) {
-				Either<ChangeCorrectionProposal, CodeActionProposal> proposal = null;
+				Either<ChangeCorrectionProposalCore, CodeActionProposal> proposal = null;
 				Object originalData = action.getRight().getData();
 				if (originalData instanceof CodeActionData codeActionData) {
 					Object originalProposal = codeActionData.getProposal();
-					if (originalProposal instanceof ChangeCorrectionProposal changeCorrectionProposal) {
+					if (originalProposal instanceof ChangeCorrectionProposalCore changeCorrectionProposal) {
 						proposal = Either.forLeft(changeCorrectionProposal);
 					} else if (originalProposal instanceof CodeActionProposal codeActionProposal) {
 						proposal = Either.forRight(codeActionProposal);
@@ -295,9 +294,8 @@ public class CodeActionHandler {
 			if (command == null) { // lazy resolve the edit.
 				if (!preferenceManager.getPreferences().isValidateAllOpenBuffersOnChanges()) {
 					if (proposal instanceof NewCUProposal
-						|| proposal instanceof NewMethodCorrectionProposal
-						|| proposal instanceof NewAnnotationMemberProposal
-						|| proposal instanceof NewVariableCorrectionProposal
+							|| proposal instanceof NewMethodCorrectionProposalCore || proposal instanceof NewAnnotationMemberProposalCore
+							|| proposal instanceof NewVariableCorrectionProposalCore
 					) {
 						codeAction.setCommand(new Command("refresh Diagnostics", "java.project.refreshDiagnostics", Arrays.asList(
 							uri, "thisFile", false, true

@@ -53,11 +53,11 @@ import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProposalRelevance;
 import org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedCorrectionProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.MissingReturnTypeCorrectionProposalCore;
 import org.eclipse.jdt.internal.ui.text.correction.proposals.MissingReturnTypeInLambdaCorrectionProposalCore;
 import org.eclipse.jdt.internal.ui.text.correction.proposals.ReplaceCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.Messages;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.JavadocTagsSubProcessor;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.MissingReturnTypeCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.TypeMismatchSubProcessor;
 import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler;
 import org.eclipse.jdt.ui.text.java.correction.ASTRewriteCorrectionProposalCore;
@@ -280,7 +280,7 @@ public class ReturnTypeSubProcessor {
 				if (block == null) {
 					return;
 				}
-				ChangeCorrectionProposalCore p1 = new MissingReturnTypeCorrectionProposal(cu, methodDecl, existingStatement, IProposalRelevance.MISSING_RETURN_TYPE);
+				ChangeCorrectionProposalCore p1 = new MissingReturnTypeCorrectionProposalCore(cu, methodDecl, existingStatement, IProposalRelevance.MISSING_RETURN_TYPE);
 				proposals.add(CodeActionHandler.wrap(p1, CodeActionKind.QuickFix));
 
 				Type returnType= methodDecl.getReturnType2();

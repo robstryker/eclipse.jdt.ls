@@ -78,6 +78,7 @@ import org.eclipse.jdt.internal.corext.refactoring.structure.ExtractInterfacePro
 import org.eclipse.jdt.internal.corext.util.JdtFlags;
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.AssignToVariableAssistProposalCore;
 import org.eclipse.jdt.internal.ui.text.correction.proposals.RefactoringCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.JDTUtils;
 import org.eclipse.jdt.ls.core.internal.JavaCodeActionKind;
@@ -87,7 +88,6 @@ import org.eclipse.jdt.ls.core.internal.corext.refactoring.RefactoringAvailabili
 import org.eclipse.jdt.ls.core.internal.corext.refactoring.code.ExtractFieldRefactoring;
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
 import org.eclipse.jdt.ls.core.internal.corrections.ProposalKindWrapper;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.AssignToVariableAssistProposal;
 import org.eclipse.jdt.ls.core.internal.corrections.proposals.IProposalRelevance;
 import org.eclipse.jdt.ls.core.internal.handlers.ChangeSignatureHandler.MethodException;
 import org.eclipse.jdt.ls.core.internal.handlers.ChangeSignatureHandler.MethodParameter;
@@ -499,12 +499,12 @@ public class RefactorProposalUtility {
 			relevance = IProposalRelevance.EXTRACT_LOCAL;
 		}
 		if (returnAsCommand) {
-			AssignToVariableAssistCommandProposal p = new AssignToVariableAssistCommandProposal(cu, AssignToVariableAssistProposal.LOCAL, expressionStatement, typeBinding, relevance,
+			AssignToVariableAssistCommandProposal p = new AssignToVariableAssistCommandProposal(cu, AssignToVariableAssistProposalCore.LOCAL, expressionStatement, typeBinding, relevance,
 					APPLY_REFACTORING_COMMAND_ID,
 					Arrays.asList(ASSIGN_VARIABLE_COMMAND, params));
 			return CodeActionHandler.wrap(p, JavaCodeActionKind.REFACTOR_ASSIGN_VARIABLE);
 		} else {
-			AssignToVariableAssistProposal p = new AssignToVariableAssistProposal(cu, AssignToVariableAssistProposal.LOCAL, expressionStatement, typeBinding, relevance);
+			AssignToVariableAssistProposalCore p = new AssignToVariableAssistProposalCore(cu, AssignToVariableAssistProposalCore.LOCAL, expressionStatement, typeBinding, relevance);
 			return CodeActionHandler.wrap(p, JavaCodeActionKind.REFACTOR_ASSIGN_VARIABLE);
 		}
 	}
@@ -541,11 +541,11 @@ public class RefactorProposalUtility {
 				relevance = IProposalRelevance.EXTRACT_LOCAL;
 			}
 			if (returnAsCommand) {
-				AssignToVariableAssistCommandProposal proposal = new AssignToVariableAssistCommandProposal(cu, AssignToVariableAssistProposal.FIELD, expressionStatement, typeBinding, relevance, APPLY_REFACTORING_COMMAND_ID,
+				AssignToVariableAssistCommandProposal proposal = new AssignToVariableAssistCommandProposal(cu, AssignToVariableAssistProposalCore.FIELD, expressionStatement, typeBinding, relevance, APPLY_REFACTORING_COMMAND_ID,
 						Arrays.asList(ASSIGN_FIELD_COMMAND, params));
 				return CodeActionHandler.wrap(proposal, JavaCodeActionKind.REFACTOR_ASSIGN_FIELD);
 			} else {
-				AssignToVariableAssistProposal proposal = new AssignToVariableAssistProposal(cu, AssignToVariableAssistProposal.FIELD, expressionStatement, typeBinding, relevance);
+				AssignToVariableAssistProposalCore proposal = new AssignToVariableAssistProposalCore(cu, AssignToVariableAssistProposalCore.FIELD, expressionStatement, typeBinding, relevance);
 				return CodeActionHandler.wrap(proposal, JavaCodeActionKind.REFACTOR_ASSIGN_FIELD);
 			}
 		}

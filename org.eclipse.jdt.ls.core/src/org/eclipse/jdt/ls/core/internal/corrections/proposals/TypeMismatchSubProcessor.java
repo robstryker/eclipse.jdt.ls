@@ -475,7 +475,7 @@ public class TypeMismatchSubProcessor {
 				int relevance= StubUtility.hasLocalVariableName(cu.getJavaProject(), name) ? 10 : 7;
 				String label= Messages.format(CorrectionMessages.TypeMismatchSubProcessor_create_loop_variable_description, BasicElementLabels.getJavaElementName(name));
 
-				NewVariableCorrectionProposalCore p = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposal.LOCAL, simpleName, null, relevance);
+				NewVariableCorrectionProposalCore p = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposalCore.LOCAL, simpleName, null, relevance);
 				proposals.add(CodeActionHandler.wrap(p, CodeActionKind.QuickFix));
 				return;
 			}

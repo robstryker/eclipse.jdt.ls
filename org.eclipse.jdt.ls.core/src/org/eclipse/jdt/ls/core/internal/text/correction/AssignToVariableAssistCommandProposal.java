@@ -17,9 +17,9 @@ import java.util.List;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.AssignToVariableAssistProposal;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.AssignToVariableAssistProposalCore;
 
-public class AssignToVariableAssistCommandProposal extends AssignToVariableAssistProposal {
+public class AssignToVariableAssistCommandProposal extends AssignToVariableAssistProposalCore {
 
 	private String command;
 	private List<Object> commandArguments;

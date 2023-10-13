@@ -40,6 +40,7 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SuperFieldAccess;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.core.manipulation.ChangeCorrectionProposalCore;
 import org.eclipse.jdt.internal.core.manipulation.dom.ASTResolving;
 import org.eclipse.jdt.internal.core.manipulation.util.BasicElementLabels;
 import org.eclipse.jdt.internal.corext.codemanipulation.GetterSetterUtil;
@@ -81,10 +82,10 @@ public class GetterSetterCorrectionSubProcessor {
 		}
 	}
 
-	public static class SelfEncapsulateFieldProposal extends ChangeCorrectionProposal { // public for tests
+	public static class SelfEncapsulateFieldProposal extends ChangeCorrectionProposalCore { // public for tests
 
 		public SelfEncapsulateFieldProposal(int relevance, IField field) {
-			super(getDescription(field), CodeActionKind.Refactor, getRefactoringChange(field), relevance);
+			super(getDescription(field), getRefactoringChange(field), relevance);
 		}
 
 		public static Change getRefactoringChange(IField field) {

@@ -294,13 +294,13 @@ public class UnresolvedElementsSubProcessor {
 		if (type == ASTNode.METHOD_DECLARATION) {
 			int relevance= StubUtility.hasParameterName(cu.getJavaProject(), name) ? IProposalRelevance.CREATE_PARAMETER_PREFIX_OR_SUFFIX_MATCH : IProposalRelevance.CREATE_PARAMETER;
 			String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createparameter_description, BasicElementLabels.getJavaElementName(name));
-			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposal.PARAM, simpleName, null, relevance);
+			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposalCore.PARAM, simpleName, null, relevance);
 			proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 		}
 		if (type == ASTNode.INITIALIZER || type == ASTNode.METHOD_DECLARATION && !ASTResolving.isInsideConstructorInvocation((MethodDeclaration) bodyDeclaration, node)) {
 			int relevance= StubUtility.hasLocalVariableName(cu.getJavaProject(), name) ? IProposalRelevance.CREATE_LOCAL_PREFIX_OR_SUFFIX_MATCH : IProposalRelevance.CREATE_LOCAL;
 			String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createlocal_description, BasicElementLabels.getJavaElementName(name));
-			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposal.LOCAL, simpleName, null, relevance);
+			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposalCore.LOCAL, simpleName, null, relevance);
 			proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 		}
 
@@ -364,7 +364,7 @@ public class UnresolvedElementsSubProcessor {
 		if (senderDeclBinding.isEnum() && !isWriteAccess) {
 			label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createenum_description,
 					new Object[] { nameLabel, ASTResolving.getTypeSignature(senderDeclBinding) });
-			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposal.ENUM_CONST, simpleName, senderDeclBinding, 10);
+			NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposalCore.ENUM_CONST, simpleName, senderDeclBinding, 10);
 			proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 		} else {
 			if (!mustBeConst) {
@@ -376,7 +376,7 @@ public class UnresolvedElementsSubProcessor {
 							new Object[] { nameLabel, ASTResolving.getTypeSignature(senderDeclBinding) });
 				}
 				int fieldRelevance= StubUtility.hasFieldName(targetCU.getJavaProject(), name) ? IProposalRelevance.CREATE_FIELD_PREFIX_OR_SUFFIX_MATCH : IProposalRelevance.CREATE_FIELD;
-				NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposal.FIELD, simpleName, senderDeclBinding, fieldRelevance);
+				NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposalCore.FIELD, simpleName, senderDeclBinding, fieldRelevance);
 				proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 			}
 
@@ -389,7 +389,7 @@ public class UnresolvedElementsSubProcessor {
 							new Object[] { nameLabel, ASTResolving.getTypeSignature(senderDeclBinding) });
 				}
 				int constRelevance= StubUtility.hasConstantName(targetCU.getJavaProject(), name) ? IProposalRelevance.CREATE_CONSTANT_PREFIX_OR_SUFFIX_MATCH : IProposalRelevance.CREATE_CONSTANT;
-				NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposal.CONST_FIELD, simpleName, senderDeclBinding, constRelevance);
+				NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, targetCU, NewVariableCorrectionProposalCore.CONST_FIELD, simpleName, senderDeclBinding, constRelevance);
 				proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 			}
 		}
@@ -650,7 +650,7 @@ public class UnresolvedElementsSubProcessor {
 						int relevance= StubUtility.hasLocalVariableName(cu.getJavaProject(), name) ? 10 : 7;
 						String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_create_loop_variable_description, BasicElementLabels.getJavaElementName(name));
 
-						NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposal.LOCAL, simpleName, null, relevance);
+						NewVariableCorrectionProposalCore proposal = new NewVariableCorrectionProposalCore(label, cu, NewVariableCorrectionProposalCore.LOCAL, simpleName, null, relevance);
 						proposals.add(CodeActionHandler.wrap(proposal, CodeActionKind.QuickFix));
 					}
 				}

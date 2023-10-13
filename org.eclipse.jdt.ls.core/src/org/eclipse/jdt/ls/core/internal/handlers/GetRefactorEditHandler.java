@@ -36,6 +36,7 @@ import org.eclipse.jdt.internal.corext.refactoring.code.IntroduceParameterRefact
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.proposals.LinkedCorrectionProposalCore;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.RefactoringCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.ChangeUtil;
 import org.eclipse.jdt.ls.core.internal.JDTUtils;
 import org.eclipse.jdt.ls.core.internal.JSONUtility;
@@ -45,7 +46,6 @@ import org.eclipse.jdt.ls.core.internal.corrections.InnovationContext;
 import org.eclipse.jdt.ls.core.internal.corrections.InvertBooleanUtility;
 import org.eclipse.jdt.ls.core.internal.corrections.ProposalKindWrapper;
 import org.eclipse.jdt.ls.core.internal.corrections.RefactorProcessor;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.RefactoringCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.handlers.InferSelectionHandler.SelectionInfo;
 import org.eclipse.jdt.ls.core.internal.handlers.MoveHandler.PackageNode;
 import org.eclipse.jdt.ls.core.internal.text.correction.RefactorProposalUtility;
@@ -117,7 +117,7 @@ public class GetRefactorEditHandler {
 				// String initializeIn = (params.commandArguments != null && !params.commandArguments.isEmpty()) ? JSONUtility.toModel(params.commandArguments.get(0), String.class) : null;
 				proposal = RefactorProposalUtility.getIntroduceParameterRefactoringProposals(params.context, context, context.getCoveringNode(), false, locations);
 				positionKey = null;
-				if (proposal.getProposal() instanceof RefactoringCorrectionProposal rcp) {
+				if (proposal.getProposal() instanceof RefactoringCorrectionProposalCore rcp) {
 					IntroduceParameterRefactoring refactoring = (IntroduceParameterRefactoring) rcp.getRefactoring();
 					ParameterInfo parameterInfo = refactoring.getAddedParameterInfo();
 					if (parameterInfo != null) {

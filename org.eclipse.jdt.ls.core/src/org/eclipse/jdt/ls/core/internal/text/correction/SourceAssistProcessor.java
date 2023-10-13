@@ -58,6 +58,7 @@ import org.eclipse.jdt.internal.corext.util.JdtFlags;
 import org.eclipse.jdt.internal.ui.text.correction.IInvocationContextCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProblemLocationCore;
 import org.eclipse.jdt.internal.ui.text.correction.IProposalRelevance;
+import org.eclipse.jdt.internal.ui.text.correction.proposals.FixCorrectionProposalCore;
 import org.eclipse.jdt.ls.core.internal.ChangeUtil;
 import org.eclipse.jdt.ls.core.internal.JDTUtils;
 import org.eclipse.jdt.ls.core.internal.JavaCodeActionKind;
@@ -72,7 +73,6 @@ import org.eclipse.jdt.ls.core.internal.codemanipulation.PartialSortMembersOpera
 import org.eclipse.jdt.ls.core.internal.corrections.CorrectionMessages;
 import org.eclipse.jdt.ls.core.internal.corrections.DiagnosticsHelper;
 import org.eclipse.jdt.ls.core.internal.corrections.InnovationContext;
-import org.eclipse.jdt.ls.core.internal.corrections.proposals.FixCorrectionProposal;
 import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler;
 import org.eclipse.jdt.ls.core.internal.handlers.CodeActionHandler.CodeActionData;
 import org.eclipse.jdt.ls.core.internal.handlers.CodeActionProposal;
@@ -609,10 +609,10 @@ public class SourceAssistProcessor {
 		if (fix == null) {
 			return Optional.empty();
 		}
-		FixCorrectionProposal proposal = new FixCorrectionProposal(fix, null, IProposalRelevance.MAKE_VARIABLE_DECLARATION_FINAL, context, kind);
+		FixCorrectionProposalCore proposal = new FixCorrectionProposalCore(fix, null, IProposalRelevance.MAKE_VARIABLE_DECLARATION_FINAL, context);
 		if (this.preferenceManager.getClientPreferences().isResolveCodeActionSupported()) {
 			CodeAction codeAction = new CodeAction(actionMessage);
-			codeAction.setKind(proposal.getKind());
+			codeAction.setKind(kind);
 			codeAction.setData(new CodeActionData(proposal, CodeActionComparator.CHANGE_MODIFIER_TO_FINAL_PRIORITY));
 			codeAction.setDiagnostics(Collections.EMPTY_LIST);
 			return Optional.of(Either.forRight(codeAction));
@@ -629,9 +629,9 @@ public class SourceAssistProcessor {
 				return Optional.empty();
 			}
 			Command command = new Command(actionMessage, CodeActionHandler.COMMAND_ID_APPLY_EDIT, Collections.singletonList(edit));
-			if (preferenceManager.getClientPreferences().isSupportedCodeActionKind(proposal.getKind())) {
+			if (preferenceManager.getClientPreferences().isSupportedCodeActionKind(kind)) {
 				CodeAction codeAction = new CodeAction(actionMessage);
-				codeAction.setKind(proposal.getKind());
+				codeAction.setKind(kind);
 				codeAction.setCommand(command);
 				codeAction.setData(new CodeActionData(null, CodeActionComparator.CHANGE_MODIFIER_TO_FINAL_PRIORITY));
 				codeAction.setDiagnostics(Collections.EMPTY_LIST);
