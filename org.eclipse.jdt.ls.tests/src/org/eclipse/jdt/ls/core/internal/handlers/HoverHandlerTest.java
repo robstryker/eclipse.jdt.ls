@@ -45,7 +45,7 @@ import org.eclipse.jdt.ls.core.internal.DependencyUtil;
 import org.eclipse.jdt.ls.core.internal.JDTUtils;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
 import org.eclipse.jdt.ls.core.internal.ResourceUtils;
-import org.eclipse.jdt.ls.core.internal.javadoc.JavaDoc2MarkdownConverter;
+import org.eclipse.jdt.ls.core.internal.javadoc.HtmlToMarkdownConverter;
 import org.eclipse.jdt.ls.core.internal.WorkspaceHelper;
 import org.eclipse.jdt.ls.core.internal.managers.AbstractProjectsManagerBasedTest;
 import org.eclipse.jdt.ls.core.internal.preferences.PreferenceManager;
@@ -1455,17 +1455,17 @@ public class HoverHandlerTest extends AbstractProjectsManagerBasedTest {
 	}
 
 	/**
-	 * No AST, no project, no hover machinery at all: feed JavaDoc2MarkdownConverter
+	 * No AST, no project, no hover machinery at all: feed HtmlToMarkdownConverter
 	 * a hand-built, already-correctly-closed HTML string whose text content happens
 	 * to contain a literal "@word" preceded by whitespace (exactly what
 	 * JdtLsJavadocAccessImpl legitimately produces for "@jls 9.6.4.1 @Target").
-	 * Using the (html, alreadyHtml=true) constructor should skip javadoc-tag
-	 * re-scanning, so the trailing closing tags must survive intact.
+	 * Since this converter has no javadoc-tag scanning of its own, the trailing
+	 * closing tags must survive intact.
 	 */
 	@Test
-	public void testJavaDoc2MarkdownConverter_alreadyRenderedHtmlWithEmbeddedAtWord() throws Exception {
+	public void testHtmlToMarkdownConverter_alreadyRenderedHtmlWithEmbeddedAtWord() throws Exception {
 		String html = "Some javadoc and then ...<ul><li><b>@jls</b><ul><li> 9.6.4.1 @Target</li></ul></li></ul>";
-		String markdown = new JavaDoc2MarkdownConverter(html, true).getAsString();
+		String markdown = new HtmlToMarkdownConverter().convert(html);
 		assertEquals("Some javadoc and then ...\n\n* **@jls**\n  * 9.6.4.1 @Target", markdown);
 	}
 }
