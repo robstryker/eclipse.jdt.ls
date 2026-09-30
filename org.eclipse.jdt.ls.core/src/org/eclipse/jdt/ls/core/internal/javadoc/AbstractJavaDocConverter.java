@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.manipulation.internal.javadoc.CoreJavaDoc2HTMLTextRe
 abstract class AbstractJavaDocConverter {
 
 	private CoreJavaDoc2HTMLTextReader reader;
+	private String preRenderedHtml;
 
 	private boolean read;
 	private String result;
@@ -40,6 +41,27 @@ abstract class AbstractJavaDocConverter {
 		setJavaDoc2HTMLTextReader(javadoc == null ? null : new StringReader(javadoc));
 	}
 
+	/**
+	 * @param html
+	 *                        javadoc content to convert
+	 * @param alreadyHtml
+	 *                        when {@code true}, {@code html} is treated as HTML that has
+	 *                        already been fully rendered (e.g. by {@code CoreJavadocAccessImpl}'s
+	 *                        AST-based tag processing) and is passed straight to {@link #convert(String)}
+	 *                        without going through the raw-javadoc '@'/'{' tag scanner again.
+	 *                        Re-scanning already-rendered HTML is not just redundant: any literal
+	 *                        "@word" appearing in the element's own text (e.g. "@jls 9.6.4.1 @Target",
+	 *                        or an email address in an {@code @author} tag) gets misread as the start
+	 *                        of a new javadoc tag, corrupting whatever HTML follows it.
+	 */
+	public AbstractJavaDocConverter(String html, boolean alreadyHtml) {
+		if (alreadyHtml) {
+			this.preRenderedHtml = html;
+		} else {
+			setJavaDoc2HTMLTextReader(html == null ? null : new StringReader(html));
+		}
+	}
+
 	private void setJavaDoc2HTMLTextReader(Reader reader) {
 		if (reader == null || reader instanceof JdtLsJavaDoc2HTMLTextReader) {
 			this.reader = (JdtLsJavaDoc2HTMLTextReader) reader;
@@ -49,8 +71,8 @@ abstract class AbstractJavaDocConverter {
 	}
 
 	public String getAsString() throws IOException {
-		if (!read && reader != null) {
-			String rawHtml = reader.getString();
+		if (!read && (reader != null || preRenderedHtml != null)) {
+			String rawHtml = preRenderedHtml != null ? preRenderedHtml : reader.getString();
 			result = convert(rawHtml);
 		}
 		return result;

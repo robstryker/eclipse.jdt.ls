@@ -105,7 +105,7 @@ public class JavadocContentAccess2 {
 				}
 			}
 			String rawHtml = access.getHTMLContent(element, true);
-			return new JavaDoc2MarkdownConverter(rawHtml).getAsString();
+			return new JavaDoc2MarkdownConverter(rawHtml, true).getAsString();
 		} catch (IOException | CoreException e) {
 
 		}

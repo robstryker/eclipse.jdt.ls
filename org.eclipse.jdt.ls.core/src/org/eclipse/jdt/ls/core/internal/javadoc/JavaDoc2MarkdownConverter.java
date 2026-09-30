@@ -70,6 +70,22 @@ public class JavaDoc2MarkdownConverter extends AbstractJavaDocConverter {
 		converter = initConverter(flexmarkOptions);
 	}
 
+	/**
+	 * @param html
+	 *                        javadoc content to convert
+	 * @param alreadyHtml
+	 *                        pass {@code true} when {@code html} is already fully-rendered HTML
+	 *                        (e.g. produced by {@code CoreJavadocAccessImpl}'s AST-based tag
+	 *                        processing), so it isn't re-scanned for '@'/'{' javadoc tags. See
+	 *                        {@link AbstractJavaDocConverter#AbstractJavaDocConverter(String, boolean)}.
+	 */
+	public JavaDoc2MarkdownConverter(String html, boolean alreadyHtml) {
+		super(html, alreadyHtml);
+		flexmarkOptions = initOptions();
+		myHtmlConverterOptions = new HtmlConverterOptions(flexmarkOptions);
+		converter = initConverter(flexmarkOptions);
+	}
+
 	private static DataHolder initOptions() {
 		MutableDataSet flexmarkOptions = new MutableDataSet();
 
