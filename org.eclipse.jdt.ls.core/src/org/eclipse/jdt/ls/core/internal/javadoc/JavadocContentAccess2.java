@@ -174,12 +174,34 @@ public class JavadocContentAccess2 {
 			}
 		}
 		if (TagElement.TAG_CODE.equals(tagName)) {
-			return "`" + sb + "`";
+			return wrapInBackticks(sb.toString());
 		} else if (TagElement.TAG_LITERAL.equals(tagName)) {
-			// escape chars that are significant in Markdown: <>*^&`[]
-			return sb.toString().replaceAll("([<>*^&\\\\`\\[\\]])", "\\\\$1");
+			// escape chars that are significant in Markdown: <>*^&`[]_
+			return sb.toString().replaceAll("([<>*^&_\\\\`\\[\\]])", "\\\\$1");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Wraps content in a Markdown code span, choosing a backtick delimiter one
+	 * longer than the longest run of backticks in the content (per the CommonMark
+	 * code span spec), and padding with a space when the content itself starts or
+	 * ends with a backtick, so the delimiter can't be closed early by content.
+	 */
+	private static String wrapInBackticks(String content) {
+		int maxRun = 0;
+		int run = 0;
+		for (int i = 0; i < content.length(); i++) {
+			if (content.charAt(i) == '`') {
+				run++;
+				maxRun = Math.max(maxRun, run);
+			} else {
+				run = 0;
+			}
+		}
+		String delimiter = "`".repeat(maxRun + 1);
+		String padding = (content.startsWith("`") || content.endsWith("`")) ? " " : "";
+		return delimiter + padding + content + padding + delimiter;
 	}
 
 	/**
