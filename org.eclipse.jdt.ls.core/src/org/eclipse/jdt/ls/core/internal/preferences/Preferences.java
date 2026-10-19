@@ -562,6 +562,12 @@ public class Preferences {
 	public static final String JAVA_JDT_LS_KOTLIN_SUPPORT_ENABLED = "java.jdt.ls.kotlinSupport.enabled";
 	public static final String JAVA_JDT_LS_GROOVY_SUPPORT_ENABLED = "java.jdt.ls.groovySupport.enabled";
 	public static final String JAVA_JDT_LS_SCALA_SUPPORT_ENABLED = "java.jdt.ls.scalaSupport.enabled";
+	/**
+	 * @deprecated the org.eclipse.jdt.core.javac bundle this setting depended on is no longer
+	 *             part of the target platform or shipped product; this setting no longer has any
+	 *             effect.
+	 */
+	@Deprecated
 	public static final String JAVA_JDT_LS_JAVAC_ENABLED = "java.jdt.ls.javac.enabled";
 
 	public static final String JAVA_COMPILE_NULLANALYSIS_NONNULL = "java.compile.nullAnalysis.nonnull";
@@ -1897,6 +1903,7 @@ public class Preferences {
 			prefs.setGroovySupportEnabled(groovySupported);
 		}
 
+		// TODO cleanup candidate once JAVA_JDT_LS_JAVAC_ENABLED is removed
 		if (containsKey(configuration, JAVA_JDT_LS_JAVAC_ENABLED)) {
 			boolean javacEnabled = getBoolean(configuration, JAVA_JDT_LS_JAVAC_ENABLED, existing.javacEnabled);
 			prefs.setJavacEnabled(javacEnabled);

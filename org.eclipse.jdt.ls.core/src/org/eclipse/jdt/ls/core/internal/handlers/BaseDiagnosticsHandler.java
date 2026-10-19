@@ -62,6 +62,7 @@ public abstract class BaseDiagnosticsHandler implements IProblemRequestor {
 	public static final int NON_PROJECT_JAVA_FILE = 0x10;
 	public static final int NOT_ON_CLASSPATH = 0x20;
 
+	// TODO cleanup candidate once JAVA_JDT_LS_JAVAC_ENABLED is removed
 	public static final String DIAG_JAVAC_CODE = "javacCode";
 	public static final String DIAG_ECJ_PROBLEM_ID = "ecjProblemId";
 	public static final String DIAG_ARGUMENTS = "arguments";
@@ -274,6 +275,7 @@ public abstract class BaseDiagnosticsHandler implements IProblemRequestor {
 				Object[] extraAttributeValues = javaProblem.getExtraMarkerAttributeValues();
 				if (extraAttributeNames != null && extraAttributeValues != null
 					&& extraAttributeNames.length == extraAttributeValues.length) {
+					// TODO cleanup candidate once JAVA_JDT_LS_JAVAC_ENABLED is removed
 					for (int i = 0; i < extraAttributeNames.length; i++) {
 						if (DIAG_JAVAC_CODE.equals(extraAttributeNames[i])) {
 							diag.setCode(String.valueOf(extraAttributeValues[i]));

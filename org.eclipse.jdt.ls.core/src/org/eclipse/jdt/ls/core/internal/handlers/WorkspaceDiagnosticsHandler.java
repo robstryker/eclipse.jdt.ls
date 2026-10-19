@@ -403,6 +403,7 @@ public final class WorkspaceDiagnosticsHandler implements IResourceChangeListene
 		}
 		d.setRange(range);
 		try {
+			// TODO cleanup candidate once JAVA_JDT_LS_JAVAC_ENABLED is removed
 			if (marker.getAttribute(BaseDiagnosticsHandler.DIAG_JAVAC_CODE) != null) {
 				String javacCode = (String) marker.getAttribute(BaseDiagnosticsHandler.DIAG_JAVAC_CODE);
 				Map<String, Object> data = new HashMap<>();
@@ -463,6 +464,7 @@ public final class WorkspaceDiagnosticsHandler implements IResourceChangeListene
 			d.setTags(DiagnosticsHandler.getDiagnosticTag(problemId));
 		}
 		try {
+			// TODO cleanup candidate once JAVA_JDT_LS_JAVAC_ENABLED is removed
 			if (marker.getAttribute(BaseDiagnosticsHandler.DIAG_JAVAC_CODE) != null) {
 				String javacCode = (String) marker.getAttribute(BaseDiagnosticsHandler.DIAG_JAVAC_CODE);
 				Map<String, Object> data = new HashMap<>();
